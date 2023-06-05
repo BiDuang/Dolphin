@@ -1,0 +1,141 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:DolphinWeb.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="DolphinWeb.Views.MainView"
+             x:DataType="vm:MainViewModel">
+    <Design.DataContext>
+        <vm:MainViewModel />
+    </Design.DataContext>
+
+
+    <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto" VerticalAlignment="Center" HorizontalAlignment="Center">
+        <Grid Grid.Row="0" RowDefinitions="Auto,Auto" x:Name="LoginFormGrid" MinWidth="200"
+              IsVisible="{Binding IsLoginPanelVisible}">
+            <Grid Grid.Row="0" RowDefinitions="Auto,Auto">
+                <TextBox Grid.Row="0" Margin="0,0,0,0" Watermark="学生门户账户"
+                         Text="{Binding Username}" />
+                <TextBox Grid.Row="1" Margin="0,10,0,0" Watermark="学生门户密码"
+                         Text="{Binding Password}" PasswordChar="●" />
+            </Grid>
+            <Button Grid.Row="1" Margin="0,10,0,0" Command="{Binding OnLoginCommand}"
+                    MinWidth="{Binding ElementName=LoginFormGrid,Path=MinWidth}">
+                <Grid>
+                    <PathIcon Data="{StaticResource ChevronRightRegular}" HorizontalAlignment="Left" />
+                    <TextBlock Text="登录" HorizontalAlignment="Right" />
+                </Grid>
+            </Button>
+        </Grid>
+        <Grid Grid.Row="0" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto" MinWidth="400" x:Name="ProfilePanel"
+              IsVisible="{Binding IsProfilePanelVisible}">
+            <TextBlock Grid.Row="0" Margin="0,10,0,0" Text="请确认以下个人信息为您本人:" FontSize="20" />
+            <TextBlock Grid.Row="1" Margin="0,10,0,0" Text="{Binding UserInfo}" />
+            <TextBlock Grid.Row="2" Margin="0,10,0,0" Text="希望 Dolphin 在何时提醒您?" />
+            <Grid Grid.Row="3" ColumnDefinitions="Auto,Auto,Auto" HorizontalAlignment="Center" Margin="0,10,0,0">
+                <CheckBox Grid.Column="0" Content="提前1天" IsChecked="{Binding Before1Day}" />
+                <CheckBox Grid.Column="1" Content="提前3天" Margin="20,0,0,0" IsChecked="{Binding Before3Day}" />
+                <CheckBox Grid.Column="2" Content="提前7天" Margin="20,0,0,0" IsChecked="{Binding Before7Day}" />
+            </Grid>
+            <TextBox Grid.Row="4" Margin="0,10,0,0" Watermark="接收提醒的邮箱" Text="{Binding Email}" />
+            <Grid Grid.Row="5" ColumnDefinitions="Auto,Auto">
+                <Button Grid.Column="0" Margin="0,10,5,0" MinWidth="195"
+                        Command="{Binding OnResetCommand}">
+                    <Grid>
+                        <PathIcon Data="{DynamicResource SignOutRegular}" HorizontalAlignment="Left" />
+                        <TextBlock Text="登出" HorizontalAlignment="Right" />
+                    </Grid>
+                </Button>
+                <Button Grid.Column="1" Margin="5,10,0,0" MinWidth="195" Command="{Binding OnRegisterCommand}">
+                    <Grid>
+                        <PathIcon Data="{DynamicResource ChevronRightRegular}" HorizontalAlignment="Right" />
+                        <TextBlock Text="继续" HorizontalAlignment="Left" />
+                    </Grid>
+                </Button>
+            </Grid>
+            <Button Grid.Row="6" Margin="0,10,0,0" MinWidth="400" Command="{Binding OnQuitCommand}">
+                <Button.Styles>
+                    <Style>
+                        <Style.Resources>
+                            <SolidColorBrush x:Key="ButtonBackground">#fe6d6d</SolidColorBrush>
+                            <SolidColorBrush x:Key="ButtonBackgroundPointerOver">#fe5858</SolidColorBrush>
+                            <SolidColorBrush x:Key="ButtonBackgroundPressed">#fe4343</SolidColorBrush>
+                        </Style.Resources>
+                    </Style>
+                </Button.Styles>
+                <Grid>
+                    <PathIcon Data="{DynamicResource DeleteForeverRegular}" HorizontalAlignment="Left" />
+                    <TextBlock Text="取消账户下所有订阅" HorizontalAlignment="Center" />
+                </Grid>
+            </Button>
+        </Grid>
+        <Grid Grid.Row="0" MinWidth="400" IsVisible="{Binding IsSuccessPanelVisible}" x:Name="SuccessPanel">
+            <Border Background="SlateGray" Opacity="0.4" CornerRadius="5" />
+            <Grid RowDefinitions="Auto,Auto" Margin="20">
+                <PathIcon Grid.Row="0" Data="{StaticResource CheckmarkRegular}" Width="40" Height="40" />
+                <TextBlock Grid.Row="1" Margin="0,15,0,0" TextAlignment="Center" Text="您已成功订阅 Dolphin 日程提醒服务" />
+            </Grid>
+        </Grid>
+        <Grid Grid.Row="0" MinWidth="400" IsVisible="{Binding IsQuitPanelVisible}" x:Name="QuitPanel">
+            <Border Background="SlateGray" Opacity="0.4" CornerRadius="5" />
+            <Grid RowDefinitions="Auto,Auto" Margin="20">
+                <PathIcon Grid.Row="0" Data="{StaticResource AlertOffRegular}" Width="40" Height="40" />
+                <TextBlock Grid.Row="1" Margin="0,15,0,0" TextAlignment="Center" Text="您已成功退出 Dolphin 日程提醒服务" />
+            </Grid>
+        </Grid>
+        <Grid Grid.Row="0" MinWidth="400" IsVisible="{Binding IsProcessingPanelVisible}" x:Name="ProcessingPanel">
+            <Border Background="SlateGray" Opacity="0.4" CornerRadius="5" />
+            <Grid RowDefinitions="Auto,Auto" Margin="20">
+                <TextBlock Grid.Row="0" TextAlignment="Center" Text="请稍候，Dolphin 正在处理您的请求..." />
+                <ProgressBar Grid.Row="1" Margin="0,20,0,0" IsIndeterminate="True" />
+            </Grid>
+        </Grid>
+        <Grid Grid.Row="0" MinWidth="400" IsVisible="{Binding IsPanicPanelVisible}" ZIndex="100" x:Name="PanicPanel">
+            <Border Background="SlateGray" Opacity="0.4" CornerRadius="5" />
+            <Grid RowDefinitions="Auto,Auto,Auto,Auto" Margin="20">
+                <Grid Grid.Row="0" ColumnDefinitions="Auto,Auto">
+                    <PathIcon Grid.Column="0" Data="{StaticResource PlugDisconnectedRegular}" Height="26" Width="26" />
+                    <TextBlock Grid.Column="1" Margin="10,0,0,0" TextAlignment="Left" FontSize="24" Text="致命错误" />
+                </Grid>
+                <TextBlock Grid.Row="1" Margin="0,10,0,0" Text="Dolphin 在尝试连接至远程服务器时遇到了致命错误" />
+                <TextBlock Grid.Row="2" Margin="0,5,0,0" Text="刷新此页面重置此程序或检查您的网络连接可能有助于解决此问题" />
+            </Grid>
+        </Grid>
+        <Grid Grid.Row="0" MinWidth="400" IsVisible="{Binding IsWrongPasswordPanelVisible}" ZIndex="100"
+              x:Name="WrongPasswordPanel">
+            <Border Background="SlateGray" Opacity="0.4" CornerRadius="5" />
+            <Grid RowDefinitions="Auto,Auto,Auto,Auto" Margin="20">
+                <Grid Grid.Row="0" ColumnDefinitions="Auto,Auto">
+                    <PathIcon Grid.Column="0" Data="{StaticResource PlugDisconnectedRegular}" Height="26" Width="26" />
+                    <TextBlock Grid.Column="1" Margin="10,0,0,0" TextAlignment="Left" FontSize="24" Text="致命错误" />
+                </Grid>
+                <TextBlock Grid.Row="1" Margin="0,10,0,0" Text="Dolphin 被远程服务器拒绝了链接" />
+                <TextBlock Grid.Row="2" Margin="0,5,0,0" Text="可能由于您输入的账户或密码有误，请确认无误后再试" />
+            </Grid>
+        </Grid>
+        <Grid Grid.Row="0" RowDefinitions="Auto,Auto,Auto,Auto" MinWidth="400" IsVisible="{Binding IsInfoPanelVisible}">
+            <Grid Grid.Row="0" ColumnDefinitions="Auto,Auto,Auto">
+                <PathIcon Grid.Column="0" Data="{StaticResource CalendarReplyRegular}" Height="26" Width="26" />
+                <TextBlock Grid.Column="1" Margin="10,0,0,0" TextAlignment="Left" FontSize="24" Text="前往项目详情" />
+            </Grid>
+            <TextBlock Grid.Row="1" Margin="0,10,0,0" Text="如果您正在使用桌面客户端，页面将会自动打开" />
+            <TextBlock Grid.Row="2" Margin="0,5,0,0" Text="如果您正在使用网页端，请输入以下链接" />
+            <TextBlock Grid.Row="3" Margin="0,5,0,0" Text="https://github.com/BiDuang/Dolphin" />
+        </Grid>
+        <TextBlock Grid.Row="1" Margin="0,30,0,0" HorizontalAlignment="Center" VerticalAlignment="Bottom"
+                   TextAlignment="Center"
+                   Text="使用 Dolphin 代表您已经同意" FontSize="12" />
+        <TextBlock Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Bottom"
+                   TextAlignment="Center"
+                   Text="“Dolphin 用户协议”" FontSize="12" />
+        <Button Grid.Row="3" Margin="0,10,0,0" HorizontalAlignment="Center" VerticalAlignment="Bottom"
+                HorizontalContentAlignment="Center" Command="{Binding OnInfoCommand}" Background="Transparent"
+                Content="(C) Dolphin 2023" FontSize="12" />
+        <TextBlock Grid.Row="4" HorizontalAlignment="Center" VerticalAlignment="Bottom" TextAlignment="Center"
+                   Text="Powered by BiDuang"
+                   FontSize="12" />
+
+    </Grid>
+
+</UserControl>

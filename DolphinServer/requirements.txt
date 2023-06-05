@@ -1,0 +1,9 @@
+fastapi
+uvicorn[standard]
+pycryptodome
+bs4
+aiohttp
+aiomysql
+aiosmtplib
+ics
+email
