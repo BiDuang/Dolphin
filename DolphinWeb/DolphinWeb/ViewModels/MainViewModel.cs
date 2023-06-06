@@ -239,7 +239,7 @@ public class MainViewModel : ViewModelBase
             var content = new StringContent(
                 $"{{\"username\":\"{Username}\",\"password\":\"{Password}\"}}",
                 Encoding.UTF8, "application/json");
-            var response = await client.PostAsync(new Uri("http://localhost:8000/homework"), content);
+            var response = await client.PostAsync(new Uri("https://ouc.114514.bid/homework"), content);
             if (response.StatusCode == HttpStatusCode.Unauthorized)
             {
                 IsLoginPanelVisible = false;
@@ -250,6 +250,7 @@ public class MainViewModel : ViewModelBase
                 IsQuitPanelVisible = false;
                 IsWrongPasswordPanelVisible = true;
                 IsInfoPanelVisible = false;
+                return;
             }
 
             response.EnsureSuccessStatusCode();
@@ -309,7 +310,7 @@ public class MainViewModel : ViewModelBase
                 $"{{\"uid\":\"{_uid}\", \"email\":\"{Email}\",\"uri\":\"{_icsUri}\",\"notice_day\":{JsonConvert.SerializeObject(noticeDays)}," +
                 $"\"noticed_info\":{JsonConvert.SerializeObject(noticedInfo)}}}",
                 Encoding.UTF8, "application/json");
-            var response = await client.PostAsync(new Uri("http://localhost:8000/register"), content);
+            var response = await client.PostAsync(new Uri("https://ouc.114514.bid/register"), content);
             response.EnsureSuccessStatusCode();
             IsLoginPanelVisible = false;
             IsProfilePanelVisible = false;
@@ -338,7 +339,7 @@ public class MainViewModel : ViewModelBase
         try
         {
             var client = new HttpClient();
-            var response = await client.DeleteAsync(new Uri($"http://localhost:8000/quit?uid={_uid}"));
+            var response = await client.DeleteAsync(new Uri($"https://ouc.114514.bid/quit?uid={_uid}"));
             response.EnsureSuccessStatusCode();
             IsLoginPanelVisible = false;
             IsProfilePanelVisible = false;

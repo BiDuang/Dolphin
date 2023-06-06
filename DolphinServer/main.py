@@ -1,8 +1,13 @@
 from fastapi import FastAPI, HTTPException, Response
 from fastapi.middleware import cors
 from bs4 import BeautifulSoup
-import base64, json
+from email.mime.text import MIMEText
+import base64
+import json
+import aiosmtplib
+import os
 
+from Configs.config import MAIL_CONFIG
 from Utils.requests import PortalLogin
 from Utils.database import AsyncMySQL
 from Models.request import LoginForm, StandardResponse
@@ -54,11 +59,28 @@ async def Register(user: Account):
             f'UID="{user.uid}"',
         )
 
+    f = open(os.path.join(os.getcwd(), "Mails", "confirm.html"), "r", encoding="utf-8")
+    msg = f.read()
+    f.close()
+    message = MIMEText(msg, "html", "utf-8")
+    message["From"] = MAIL_CONFIG["username"]
+    message["To"] = user.email
+    message["Subject"] = "[Dolphin] 您已成功订阅日程通知"
+
+    await aiosmtplib.send(
+        message,
+        hostname=MAIL_CONFIG["host"],
+        port=MAIL_CONFIG["port"],
+        start_tls=True,
+        username=MAIL_CONFIG["username"],
+        password=MAIL_CONFIG["password"],
+    )
+
     return Response(status_code=201)
 
 
 @app.delete("/quit")
-async def Quit(uid:str):
+async def Quit(uid: str):
     await db.delete("ics_links", f'UID="{uid}"')
     return Response(status_code=200)
 
